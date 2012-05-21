@@ -1,20 +1,20 @@
 === Plugin Name ===
 Contributors: tasiot
 Donate link: http://rdpano.rd-creation.fr/faire-un-don
-Tags: krpano, panotour, panorama, 360, visite virtuelle
+Tags: krpano, panotour, pano, panorama, 360, visite virtuelle
 Requires at least: 0.1 
 Tested up to: 0.2
 Stable tag: 0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-IntÃ©gration de panorama krpano et panotourÂ® sur WordPress
+Intégration de panorama krpano et panotour® sur WordPress
 
 == Description ==
 
-RDPano est un plugin pour intÃ©grer facilement vos panoramas krpano et panotourÂ® sur la plateforme WordPress.
+RDPano est un plugin pour intégrer facilement vos panoramas krpano et panotour® sur la plateforme WordPress.
 
-L'intÃ©gration de vos panoramas devient un jeu d'enfant et votre animation 360Â° est vue par tous !
+L'intégration de vos panoramas devient un jeu d'enfant et votre animation 360° est vue par tous !
 
 == Installation ==
 
@@ -24,7 +24,7 @@ L'intÃ©gration de vos panoramas devient un jeu d'enfant et votre animation 360Â°
 == Changelog ==
 
 = 0.2 =
-* Ajout de la compatibilitÃ© des mini-attributs de PanoPress : "f" pour "file", "p" pour "preview", "w" pour "width", "h" pour "height" et "t" pour "title".
+* Ajout de la compatibilité des mini-attributs de PanoPress : "f" pour "file", "p" pour "preview", "w" pour "width", "h" pour "height" et "t" pour "title".
 
 = 0.1 =
-* CrÃ©ation du plugin
+* Création du plugin
