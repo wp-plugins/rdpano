@@ -1,7 +1,7 @@
 === Plugin Name ===
 Contributors: tasiot
 Donate link: http://rdpano.rd-creation.fr/faire-un-don
-Tags: krpano, panotour, panorama, 360, visite virtuelle
+Tags: krpano, panotour, pano, panorama, 360, visite virtuelle
 Requires at least: 0.1 
 Tested up to: 0.2
 Stable tag: 0.2
