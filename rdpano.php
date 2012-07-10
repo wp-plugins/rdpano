@@ -4,15 +4,15 @@
 Plugin Name: RDPano
 Description: Intégration de panorama krpano et panotour®
 Author: RD-Création - Roland Dufour
-Version: 0.2
-Author URI: http://rdpano.rd-creation.fr
+Version: 0.3
+Author URI: http://rdpano.rd-creation.fr/
 */
 
 new RDPano();
 
 class RDPano
 {
-	const VERSION = '0.2';
+	const VERSION = '0.3';
 	static $RDPanoInst = 0;
 	static $instances = array();
 	
@@ -214,7 +214,7 @@ class RDPano_Inst
 		$preview = (!empty($this->options['preview'])) ? $this->options['preview'] : null;
 		$withPreview = (null !== $preview); 
 		if ($withPreview){
-			$styles[] = 'background-image: url('.$preview.');';
+			$styles[] = 'background-image: url(\''.str_replace('\'', '', $preview).'\');';
 		}
 		
 		$content = '<img src="'.plugins_url('', __FILE__).'/play.png" class="rdpano_play" alt="" />';
