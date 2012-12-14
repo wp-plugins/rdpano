@@ -23,7 +23,7 @@ L'intégration de vos panoramas devient un jeu d'enfant et votre animation 360°
 
 == Changelog ==
 
-= 0.3 =
+= 0.4 =
 * Ajout de la prise en charge des panoramas générés par panoStudio.
 
 = 0.3 =
