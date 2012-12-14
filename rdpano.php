@@ -2,9 +2,9 @@
 
 /*
 Plugin Name: RDPano
-Description: Intégration de panorama krpano et panotour®
+Description: Intégration de panorama krpano, panotour® et panoStudio
 Author: RD-Création - Roland Dufour
-Version: 0.3
+Version: 0.4
 Author URI: http://rdpano.rd-creation.fr/
 */
 
@@ -12,7 +12,7 @@ new RDPano();
 
 class RDPano
 {
-	const VERSION = '0.3';
+	const VERSION = '0.4';
 	static $RDPanoInst = 0;
 	static $instances = array();
 	
@@ -27,7 +27,10 @@ class RDPano
 		}
 		
 		wp_register_style('rdpano', plugins_url('', __FILE__) . '/rdpano.css', self::VERSION);
-		wp_register_script('rdpano', plugins_url('', __FILE__) . '/krpano.js', self::VERSION);
+		
+		if ($this->options['rdpano_panostudio'] != '1'){
+			wp_register_script('rdpano', plugins_url('', __FILE__) . '/krpano.js', self::VERSION);
+		}
 		
 		add_action('admin_menu', array($this, 'addOptionsPage'));
 		add_action('init', array($this, 'initTinyMce'));
@@ -40,6 +43,7 @@ class RDPano
 			update_option('rdpano_height', (int)$_POST['rdpano_height']);
 			update_option('rdpano_global_swf', trim(trim((string)$_POST['rdpano_global_swf']), '/'));
 			update_option('rdpano_panopress', ($_POST['rdpano_panopress'] == '1') ? '1' : '0');
+			update_option('rdpano_panostudio', ($_POST['rdpano_panostudio'] == '1') ? '1' : '0');
 		}
 
 		$this->options = array(
@@ -47,7 +51,8 @@ class RDPano
 			'rdpano_width'      => get_option('rdpano_width'),
 			'rdpano_height'     => get_option('rdpano_height'),
 			'rdpano_global_swf' => get_option('rdpano_global_swf'),
-			'rdpano_panopress'  => get_option('rdpano_panopress', '0')
+			'rdpano_panopress'  => get_option('rdpano_panopress', '0'),
+			'rdpano_panostudio' => get_option('rdpano_panostudio', '0')
 		);
 	}
 	
@@ -135,6 +140,29 @@ class RDPano
 			$json  = json_encode($jsonA);
 			$src   = plugins_url('', __FILE__);
 			$title = (!empty($jsonA['title'])) ? $jsonA['title'] : 'Panorama - Vue mobile par RDPano';
+			
+			
+			if (isset($_POST['panostudio']) && $_POST['panostudio'] == '1'){
+				$el = 'document.getElementById(\''.$_POST['target'].'\')';
+				if (!isset($_POST['xml'])){
+					$_POST['xml'] = preg_replace('`\.swf$`i', '.xml', $_POST['swf']);
+				}
+				$_POST['xml'] = plugins_url('', __FILE__).'/xml.php?xml='.$_POST['xml'];
+				$html = '<object classid="CLSID:D27CDB6E-AE6D-11cf-96B8-444553540000" width="'.$_POST['width'].'" height="'.$_POST['height'].'" id="" codebase="http://active.macromedia.com/flash9/cabs/swflash.cab#version=9,0,28,0"><param name="movie" value="'.$src.'/panoStudioViewer.swf" /><param name="allowScriptAccess" value="always" /><param name="allowNetworking" value="all" /><param name="allowFullScreen" value="true" /><param name="FlashVars" value="pano='.$_POST['xml'].'" /><embed src="'.$src.'/panoStudioViewer.swf" width="'.$_POST['width'].'" height="'.$_POST['height'].'" type="application/x-shockwave-flash" name="" allowScriptAccess="always" allowNetworking="all" allowFullScreen="true" FlashVars="pano='.$_POST['xml'].'" pluginspage="http://www.macromedia.com/go/getflashplayer"></embed></object>';
+				$script  = '<script type="text/javascript">//<![CDATA[
+  '.$el.'.innerHTML = \''.str_replace('"', '&quot;', str_replace('\'', '', $html)).'\'.replace(/&quot;/g, String.fromCharCode(34));
+  //]]></script>';
+			} 
+			
+			else {
+				$onclick = 'embedpano('.str_replace('"', '\'', str_replace('\'', '&amp;apos;', json_encode($datas))).'); '.$el.'.style.background = \'\'; '.$el.'.removeAttribute(\'onclick\');';
+				
+				$script = '<script type="text/javascript" src="'.$src.'/krpano.js"></script>
+  <script type="text/javascript">//<![CDATA[
+  embedpano('.$json.');
+  //]]></script>';
+			}
+			
 			echo <<<HTML
 <!DOCTYPE html>
 <html>
@@ -153,10 +181,7 @@ class RDPano
 </head>
 <body>
   <div id="container"></div>
-  <script type="text/javascript" src="{$src}/krpano.js"></script>
-  <script type="text/javascript">//<![CDATA[
-  embedpano($json);
-  //]]></script>
+  $script
   </body>
 </html>
 HTML;
@@ -193,6 +218,9 @@ class RDPano_Inst
 			else {
 				$datas['swf'] = preg_replace('/\.xml$/i', '.swf', $this->options['file']);
 			}
+		}
+		if (isset($this->options['panostudio']) && $this->options['panostudio'] == '1'){
+			$datas['panostudio'] = '1';
 		}
 		
 		$styles = array();
@@ -233,7 +261,16 @@ class RDPano_Inst
 		} 
 		else {
 			$el = 'document.getElementById(\''.$this->id.'\')';
-			$onclick = 'embedpano('.str_replace('"', '\'', str_replace('\'', '&amp;apos;', json_encode($datas))).'); '.$el.'.style.background = \'\'; '.$el.'.removeAttribute(\'onclick\');';
+			if (isset($this->options['panostudio']) && $this->options['panostudio'] == '1'){
+				if (!isset($datas['xml'])){
+					$datas['xml'] = preg_replace('`\.swf$`i', '.xml', $datas['swf']);
+				}
+				$datas['xml'] = plugins_url('', __FILE__).'/xml.php?xml='.$datas['xml'];
+				$html = '<object classid="CLSID:D27CDB6E-AE6D-11cf-96B8-444553540000" width="'.$datas['width'].'" height="'.$datas['height'].'" id="" codebase="http://active.macromedia.com/flash9/cabs/swflash.cab#version=9,0,28,0"><param name="movie" value="'.plugins_url('', __FILE__).'/panoStudioViewer.swf" /><param name="allowScriptAccess" value="always" /><param name="allowNetworking" value="all" /><param name="allowFullScreen" value="true" /><param name="FlashVars" value="pano='.$datas['xml'].'" /><embed src="'.plugins_url('', __FILE__).'/panoStudioViewer.swf" width="'.$datas['width'].'" height="'.$datas['height'].'" type="application/x-shockwave-flash" name="" allowScriptAccess="always" allowNetworking="all" allowFullScreen="true" FlashVars="pano='.$datas['xml'].'" pluginspage="http://www.macromedia.com/go/getflashplayer"></embed></object>';
+				$onclick = $el.'.innerHTML = \''.str_replace('"', '&quot;', str_replace('\'', '', $html)).'\'.replace(/&quot;/g, String.fromCharCode(34));';
+			} else {
+				$onclick = 'embedpano('.str_replace('"', '\'', str_replace('\'', '&amp;apos;', json_encode($datas))).'); '.$el.'.style.background = \'\'; '.$el.'.removeAttribute(\'onclick\');';
+			}
 		}
 		$b = '<div id="'.$this->id.'" class="rdpano" title="'.$t.'" style="'.implode(' ', $styles).'"'.($withPreview ? ' onclick="'.$onclick.'"' : '').'>'.$content.'</div>';
 		// Pas de preview mais pas depuis un mobile

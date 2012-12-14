@@ -28,6 +28,9 @@
 			b += rdpano.prepareAttr('height', rdpano.$('height').value);
 			b += rdpano.prepareAttr('title', rdpano.$('title').value);
 			b += rdpano.prepareAttr('preview', rdpano.$('preview').value);
+			if (rdpano.$('panostudio').checked){
+				b += rdpano.prepareAttr('panostudio', rdpano.$('panostudio').value);
+			}
 			b += ']';
 
 			tinyMCE.execCommand('mceInsertContent', false, b);
@@ -61,6 +64,10 @@
 			<label for="width">Taille du panorama&nbsp;:</label><br />
 			<label for="width"><em>Largeur&nbsp;:</em></label> <input type="text" name="width" id="width" value="" size="6" /> <em><abbr title="pixels">px</abbr></em> &nbsp;&nbsp;
 			<label for="width"><em>Hauteur&nbsp;:</em></label> <input type="text" name="height" id="height" value="" size="6" /> <em><abbr title="pixels">px</abbr></em>
+		</p>
+		<p>
+			<label for="panostudio">Panorama g&eacute;n&eacute;r&eacute; par panoStudio&nbsp;:</label><br />
+			<input type="checkbox" name="panostudio" id="panostudio" value="1" /> oui
 		</p>
 	</fieldset>
 	<div class="mceActionPanel">

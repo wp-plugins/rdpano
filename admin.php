@@ -5,7 +5,7 @@
 
 <div class="wrap">
 	<div id="icon-options-general" class="icon32"><br /></div>
-	<h2>RDPano - Panoramas krpano et panotour®</h2>
+	<h2>RDPano - Panoramas krpano et panotour&reg;</h2>
 	<form action="<?php echo $formAction; ?>" method="post">
 		<table class="form-table">
 			<tbody>
@@ -46,7 +46,7 @@
 					<th scope="row"><label for="rdpano_panopress">Compatibilit&eacute; PanoPress</label></th>
 					<td>
 						<input type="checkbox" id="rdpano_panopress" name="rdpano_panopress" value="1"<?php if ($this->options['rdpano_panopress'] == '1'){ echo ' checked="checked"'; } ?> />
-						<label for="rdpano_panopress">Utiliser &eacute;galement la syntaxe [pano file=""] utilis&eacute;e par le module PanoPress</label>
+						<label for="rdpano_panopress">Utiliser &eacute;galement la syntaxe [pano file=&quot;&quot;] utilis&eacute;e par le module PanoPress</label>
 						<p><small><em>Cocher la case si vous utilisiez le plugin PanoPress et que vous ne souhaitez plus l'utiliser (pensez &agrave; le d&eacute;sactiver).</em></small></p>
 					</td>
 				</tr>
