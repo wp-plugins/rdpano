@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>RDPano</title>
+	<link rel="stylesheet" href="/wp-admin/css/colors-fresh.css" />
+	<script type="text/javascript" src="/wp-includes/js/tinymce/tiny_mce_popup.js"></script>
+	<script type="text/javascript">//<![CDATA[
+	var rdpano = {
+		$: function(id){
+			return document.getElementById(id);
+		},
+		init: function(){},
+		prepareAttr: function(k, v){
+			if (v != ''){
+				return ' '+k+'="'+v.replace(/"/g, '')+'"';
+			}
+			return '';
+		},
+		insert: function(){
+			var file = rdpano.$('file').value;
+
+			if (file == ''){
+				alert('Merci de saisir le chemin du fichier SWF ou XML.');
+				return;
+			}
+			var b = '[rdpano file="'+file.replace(/"/g, '')+'"';
+			b += rdpano.prepareAttr('width', rdpano.$('width').value);
+			b += rdpano.prepareAttr('height', rdpano.$('height').value);
+			b += rdpano.prepareAttr('title', rdpano.$('title').value);
+			b += rdpano.prepareAttr('preview', rdpano.$('preview').value);
+			if (rdpano.$('panostudio').checked){
+				b += rdpano.prepareAttr('panostudio', rdpano.$('panostudio').value);
+			}
+			b += ']';
+
+			tinyMCE.execCommand('mceInsertContent', false, b);
+			tinyMCEPopup.close();
+		}
+	};
+	tinyMCEPopup.onInit.add(rdpano.init, rdpano);
+	//]]></script>
+</head>
+<body>
+
+<form onsubmit="rdpano.insert(); return false;" action="#" class="ui-dialog-content ui-widget-content">
+	<fieldset>
+		<legend>Champ obligatoire</legend>
+		<p>
+			<label for="file"><strong>Chemin du fichier SWF ou XML&nbsp;:</strong></label><br />
+			<input type="text" name="file" id="file" size="40" value="" />
+		</p>
+	</fieldset>
+	<fieldset>
+		<legend>Champs conseill&eacute;s</legend>
+		<p>
+			<label for="preview">Chemin de l'image de pr&eacute;visualisation&nbsp;:</label><br />
+			<input type="text" name="preview" id="preview" size="40" value="" />
+		</p>
+		<p>
+			<label for="title">Titre du panorama&nbsp;:</label><br />
+			<input type="text" name="title" id="title" size="40" value="" />
+		</p>
+		<p>
+			<label for="width">Taille du panorama&nbsp;:</label><br />
+			<label for="width"><em>Largeur&nbsp;:</em></label> <input type="text" name="width" id="width" value="" size="6" /> <em><abbr title="pixels">px</abbr></em> &nbsp;&nbsp;
+			<label for="width"><em>Hauteur&nbsp;:</em></label> <input type="text" name="height" id="height" value="" size="6" /> <em><abbr title="pixels">px</abbr></em>
+		</p>
+		<p>
+			<label for="panostudio">Panorama g&eacute;n&eacute;r&eacute; par panoStudio&nbsp;:</label><br />
+			<input type="checkbox" name="panostudio" id="panostudio" value="1" /> oui
+		</p>
+	</fieldset>
+	<div class="mceActionPanel">
+		<div style="float: left">
+			<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
+		</div>
+		<div style="float: right">
+			<input type="submit" id="insert" name="insert" value="{#insert}" />
+		</div>
+	</div>
+</form>
+
+</body>
+</html>
